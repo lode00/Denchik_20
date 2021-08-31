@@ -1,1 +1,1 @@
-# Denchik_20
+#zabbix code
