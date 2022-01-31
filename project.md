@@ -1,0 +1,73 @@
+## Подготовка окружения и соединений
+```markdown
+## Генерируем ssh-ключ для связи gitlab и нашего сервера
+root@project-devops:~# ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa
+Your public key has been saved in /root/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:crnx8g8o8d3KVmnyB06qaiJfesN4obbgNgAXjtJ1VH8 root@project-devops
+The key's randomart image is:
++---[RSA 3072]----+
+|     ....        |
+|  . . .  .       |
+| + o .    . E    |
+|+ +      . .     |
+|o.    o S    .   |
+|.     .= *..*    |
+| ..  +o.= +O..   |
+| .+.=o*. +ooo .  |
+| ..=+*.o.o+...   |
++----[SHA256]-----+
+```
+```markdown
+## Проверяем, что ключи добавились и копируем его
+root@project-devops:~# cat /root/.ssh/id_rsa.pub  
+``` 
+```markdown
+## клонируем наш проект
+root@project-devops:~# git clone git@gitlab.com:lobachdenis00/course-work.git
+```
+```markdown
+## Инициализируем наш проект
+root@project-devops::~/course-work# git init .
+```
+```markdown
+## Коммитим
+root@project-devops:~/course-work# git commit -am 'Add app'
+```
+```markdown
+## Пушим в gitlab
+root@project-devops:~/course-work# git push origin main
+```
+## Добавляем gitlab-runner
+```bash
+root@project-devops:~#  curl -L --output /usr/local/bin/gitlab-runner   https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
+root@project-devops:~#  chmod +x /usr/local/bin/gitlab-runner
+root@project-devops:~#  sudo useradd --comment 'GitLab Runner' --create-home gitlab-runner --shell /bin/bash
+root@project-devops:~# sudo gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
+Runtime platform                                    arch=amd64 os=linux pid=1946 revision=98daeee0 version=14.7.0
+root@project-devops:~# sudo gitlab-runner start
+Runtime platform                                    arch=amd64 os=linux pid=2008 revision=98daeee0 version=14.7.0
+```
+```bash
+root@project-devops:~# sudo gitlab-runner register
+Runtime platform                                    arch=amd64 os=linux pid=2035 revision=98daeee0 version=14.7.0
+Running in system-mode.
+Enter the GitLab instance URL (for example, https://gitlab.com/):
+https://gitlab.com/
+Enter the registration token:
+16mfPr9zrEyqaqHkz7JF
+Enter a description for the runner:
+[project-devops]: project-devops
+Enter tags for the runner (comma-separated):
+docker
+Registering runner... succeeded                     runner=16mfPr9z
+Enter an executor: custom, docker-ssh, ssh, kubernetes, docker, parallels, shell, virtualbox, docker+machine, docker-ssh+machine:
+shell
+Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded!
+```
+
