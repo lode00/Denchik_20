@@ -70,4 +70,46 @@ Enter an executor: custom, docker-ssh, ssh, kubernetes, docker, parallels, shell
 shell
 Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded!
 ```
+```markdown
+## docker-compose.yaml для локальной сборки
+version: '3'
+services:
+  postgres:
+    restart: always
+    container_name: postgres
+    image: postgres:13
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'example'
+      POSTGRES_DB: 'dev-school'
+    ports:
+      - '5432:5432'
+  back:
+    restart: always
+    container_name: backend
+    image: dev-school-app:1.0-SNAPSHOT
+    environment:
+      DATASOURCE_URL: jdbc:postgresql://postgres:5432/dev-school
+      DATASOURCE_USERNAME: postgres
+      DATASOURCE_PASSWORD: example
+      BASE_PATH: http://localhost:8080
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+  front:
+    restart: always
+    image: devschool-front-app:1.0.0
+    container_name: frontend
+    ports:
+      - '8081:8081'
+    depends_on:
+      - back
+```
+```markdown
+## Gitlab registry 
+root@project-devops:~/course-work/dev-school-app#  docker tag 0fccd173f06c  registry.gitlab.com/lobachdenis00/course-work/devschool-front-app:1.0.0
+root@project-devops:~/course-work/dev-school-app# docker login registry.gitlab.com -u lobachdenis00 -p glpat-3HyahgtB9gJb9xpvd78b
+root@project-devops:~/course-work/dev-school-app# docker push   registry.gitlab.com/lobachdenis00/course-work/devschool-front-app:1.0.0
+```
 
