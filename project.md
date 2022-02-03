@@ -70,8 +70,8 @@ Enter an executor: custom, docker-ssh, ssh, kubernetes, docker, parallels, shell
 shell
 Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded!
 ```
-```markdown
 ## docker-compose.yaml для локальной сборки
+```bash
 version: '3'
 services:
   postgres:
