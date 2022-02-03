@@ -112,4 +112,19 @@ root@project-devops:~/course-work/dev-school-app#  docker tag 0fccd173f06c  regi
 root@project-devops:~/course-work/dev-school-app# docker login registry.gitlab.com -u lobachdenis00 -p glpat-3HyahgtB9gJb9xpvd78b
 root@project-devops:~/course-work/dev-school-app# docker push   registry.gitlab.com/lobachdenis00/course-work/devschool-front-app:1.0.0
 ```
+## Предварительная настройка gitlab-runner
+```markdown
+## docker установка
+curl -fsSL https://get.docker.com -o get-docker.sh 
+sudo sh get-docker.sh 
+sudo chmod 666 /var/run/docker.sock
+## java+node+yarn
+apt-get update
+apt-get install openjdk-8-jdk -y
+apt-get install -y curl vim wget gcc g++ make
+curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
+apt-get install -y nodejs
+wget "https://github.com/yarnpkg/yarn/releases/download/v1.22.11/yarn_1.22.11_all.deb"
+dpkg -i yarn_1.22.11_all.deb 
+rm yarn_1.22.11_all.deb
 
