@@ -166,8 +166,45 @@ spec:
       http01:
         ingress:
           class: nginx
-
+```
+## Dockerfile 
 ``` 
+
+FROM alpine
+
+# Ignore to update versions here
+# docker build --no-cache --build-arg KUBECTL_VERSION=${tag} --build-arg HELM_VERSION=${helm} --build-arg KUSTOMIZE_VERSION=${kustomize_version} -t ${image}:${tag} .
+ARG HELM_VERSION=3.2.1
+ARG KUBECTL_VERSION=1.17.5
+ARG KUSTOMIZE_VERSION=v3.8.1
+ARG KUBESEAL_VERSION=v0.15.0
+
+# Install helm (latest release)
+# ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
+ENV BASE_URL="https://get.helm.sh"
+ENV TAR_FILE="helm-v${HELM_VERSION}-linux-amd64.tar.gz"
+RUN apk add --update --no-cache curl ca-certificates bash git && \
+    curl -sL ${BASE_URL}/${TAR_FILE} | tar -xvz && \
+    mv linux-amd64/helm /usr/bin/helm && \
+    chmod +x /usr/bin/helm && \
+    rm -rf linux-amd64
+# Install awscli
+RUN apk add --update --no-cache python3 && \
+    python3 -m ensurepip && \
+    pip3 install --upgrade pip && \
+    pip3 install awscli && \
+    pip3 cache purge
+# Install kubectl (same version of aws esk)
+RUN curl -sLO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
+    mv kubectl /usr/bin/kubectl && \
+    chmod +x /usr/bin/kubectl
+RUN mkdir /home/.kube/
+
+ADD config /home/.kube/
+RUN mkdir ~/.kube/
+RUN cp /home/.kube/config ~/.kube/
+EXPOSE 8080
+
  ```
   
   
