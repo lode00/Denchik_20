@@ -131,3 +131,44 @@ rm yarn_1.22.11_all.deb
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 ```
+
+## certificate-production.yaml
+```
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ssl-cert-production
+  namespace: dlobach-prod
+spec:
+  secretName: ssl-cert-production
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: dlobach-prod.school.telekom.sh
+  dnsNames:
+  - dlobach-prod.school.telekom.sh
+  
+ ``` 
+## production-issuer.yaml 
+ ```
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: lobachdenis00@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-production
+    solvers:
+    - selector: {}
+      http01:
+        ingress:
+          class: nginx
+
+``` 
+ ```
+  
+  
+
